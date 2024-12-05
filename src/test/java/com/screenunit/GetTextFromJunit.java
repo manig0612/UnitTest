@@ -67,6 +67,7 @@ public class GetTextFromJunit extends BaseClass {
 		
 		Thread.sleep(3000);
 		WebElement toCartBtn = toFindLocatorByXpath("//a[text() = ' Go To Cart ']");
+		//WebElement fluentWait = fluentWait(toCartBtn);
 		toClickBtn(toCartBtn);
 //		
 		WebElement findMyCart =  toFindLocatorByXpath("//h5[text() = 'My Cart']");
@@ -177,6 +178,7 @@ public class GetTextFromJunit extends BaseClass {
 		boolean conformOrder = orderId.contains("Order");
 		Assert.assertTrue("verify order", conformOrder);
 		testlist.add(orderId);
+		toWriteExcel(1, 11, orderId);
 		
 		
 		

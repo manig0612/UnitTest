@@ -2,13 +2,16 @@ package com.screenunit;
 
 	import java.io.File;
 	import java.io.FileInputStream;
-	import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 	import java.io.IOException;
 	import java.text.SimpleDateFormat;
 	import java.time.Duration;
 	import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
-	import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Cell;
 	import org.apache.poi.ss.usermodel.CellType;
 	import org.apache.poi.ss.usermodel.DateUtil;
 	import org.apache.poi.ss.usermodel.Row;
@@ -26,8 +29,8 @@ package com.screenunit;
 	import org.openqa.selenium.ie.InternetExplorerDriver;
 	import org.openqa.selenium.interactions.Actions;
 	import org.openqa.selenium.support.ui.ExpectedConditions;
-	import org.openqa.selenium.support.ui.Select;
-	import org.openqa.selenium.support.ui.WebDriverWait;
+    import org.openqa.selenium.support.ui.Select;
+    import org.openqa.selenium.support.ui.WebDriverWait;
 
 	public class BaseClass {
 		
@@ -156,6 +159,7 @@ package com.screenunit;
 			cell.setCellValue(saveToExcel);
 			FileOutputStream fs = new FileOutputStream(file);
 			workbook.write(fs);
+			workbook.close();
 		}
 		
 		
@@ -239,7 +243,52 @@ package com.screenunit;
 //			waitclick.until(ExpectedConditions.c)
 //		}
 		
+//		public WebElement fluentWait(WebElement element) {
+//			Wait  w = new FluentWait(driver).withTimeout(Duration.ofSeconds(60)).pollingEvery(Duration.ofSeconds(10)).ignoring(Exception.class);
+//			Object ob = w.until(ExpectedConditions.elementToBeClickable(element));
+//			WebElement secondelement = (WebElement)ob;
+//			return secondelement;
+//		}
 		
+		public String toGetAttribute(WebElement element) {
+			String attribute = element.getAttribute("value");
+			return attribute;
+		}
+		
+		public LinkedList<String> limitedCell (String sheet,int from, int to) throws IOException{
+			
+			LinkedList<String> exceldata = new LinkedList<String>();
+			File file = new File("C:\\Users\\Cyntexia\\eclipse-workspace\\ScreeshotJUnit\\Excel\\grocerydata.xlsx");
+			FileInputStream stream = new FileInputStream(file);
+			Workbook workbook = new XSSFWorkbook(stream);
+			
+			Sheet gotsheet = workbook.getSheet(sheet);
+			Row gotrow = gotsheet.getRow(1);
+			
+			for (int i = from; i <= to; i++) {
+				Cell gotcell = gotrow.getCell(i);
+				CellType cellType = gotcell.getCellType();
+				switch (cellType) {
+				case STRING:
+					String cellStr = gotcell.getStringCellValue();
+					exceldata.add(cellStr);
+					break;
+				case NUMERIC:
+					long phno = (long)gotcell.getNumericCellValue();
+					String numValue = String.valueOf(phno);
+                    exceldata.add(numValue);
+                    break;
+				default:
+					break;
+				}
+				
+				
+				
+			}
+			
+			return exceldata;
+			
+		}
 		
 		
 
